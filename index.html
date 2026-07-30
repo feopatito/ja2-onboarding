@@ -1,0 +1,781 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>JA2 — Moula pro Petru | Onboarding</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: #0f0f13;
+    color: #e8e8f0;
+    min-height: 100vh;
+    padding: 24px 16px;
+  }
+  .container { max-width: 800px; margin: 0 auto; }
+
+  .header {
+    text-align: center;
+    padding: 40px 0 32px;
+    border-bottom: 1px solid #2a2a3a;
+    margin-bottom: 40px;
+  }
+  .header .emoji { font-size: 48px; display: block; margin-bottom: 12px; }
+  .header h1 { font-size: 28px; font-weight: 700; color: #fff; margin-bottom: 8px; }
+  .header p { color: #888; font-size: 15px; }
+
+  .section {
+    background: #1a1a24;
+    border: 1px solid #2a2a3a;
+    border-radius: 12px;
+    padding: 24px;
+    margin-bottom: 24px;
+  }
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 20px;
+  }
+  .section-num {
+    width: 32px; height: 32px;
+    background: #6c63ff;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 700; font-size: 14px; flex-shrink: 0;
+  }
+  .section h2 { font-size: 18px; font-weight: 600; color: #fff; }
+  .section .subtitle { font-size: 13px; color: #666; margin-top: 2px; }
+
+  /* Checklist */
+  .checklist { list-style: none; }
+  .checklist li {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 10px 0;
+    border-bottom: 1px solid #22222e;
+    cursor: pointer;
+    transition: background 0.15s;
+    border-radius: 6px;
+    padding-left: 6px;
+    padding-right: 6px;
+  }
+  .checklist li:last-child { border-bottom: none; }
+  .checklist li:hover { background: #22223a; }
+  .checklist li.done .label { text-decoration: line-through; color: #555; }
+  .checklist li.done .check { background: #22c55e; border-color: #22c55e; }
+  .checklist li.done .check::after { opacity: 1; }
+  .check {
+    width: 22px; height: 22px; flex-shrink: 0;
+    border: 2px solid #3a3a4a;
+    border-radius: 6px;
+    margin-top: 1px;
+    position: relative;
+    transition: all 0.2s;
+    background: #111118;
+  }
+  .check::after {
+    content: '✓';
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    color: white;
+    font-size: 13px;
+    font-weight: 700;
+    opacity: 0;
+    transition: opacity 0.2s;
+  }
+  .label { font-size: 15px; line-height: 1.5; flex: 1; }
+  .label .note { display: block; font-size: 12px; color: #666; margin-top: 3px; }
+  .moula-insists {
+    display: inline-block;
+    background: #6c63ff22;
+    border: 1px solid #6c63ff55;
+    color: #a89dff;
+    font-size: 11px;
+    padding: 2px 8px;
+    border-radius: 20px;
+    margin-left: 8px;
+    white-space: nowrap;
+  }
+
+  /* Questions / inputs */
+  .question-block {
+    margin-bottom: 20px;
+  }
+  .question-block:last-child { margin-bottom: 0; }
+  .q-label {
+    font-size: 14px;
+    color: #a0a0b8;
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .q-label .tag {
+    font-size: 11px;
+    background: #ff6b3522;
+    border: 1px solid #ff6b3555;
+    color: #ff9966;
+    padding: 2px 8px;
+    border-radius: 20px;
+  }
+  .q-label .tag.optional {
+    background: #3a3a2222;
+    border-color: #555533;
+    color: #888866;
+  }
+  textarea, input[type="text"], select {
+    width: 100%;
+    background: #111118;
+    border: 1px solid #2a2a3a;
+    border-radius: 8px;
+    color: #e8e8f0;
+    font-family: inherit;
+    font-size: 14px;
+    padding: 10px 14px;
+    outline: none;
+    transition: border-color 0.2s;
+    resize: vertical;
+  }
+  textarea:focus, input[type="text"]:focus, select:focus {
+    border-color: #6c63ff;
+  }
+  textarea { min-height: 80px; }
+  select option { background: #1a1a24; }
+
+  /* Radio options */
+  .radio-group { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 4px; }
+  .radio-option {
+    display: flex; align-items: center; gap: 8px;
+    background: #111118;
+    border: 1px solid #2a2a3a;
+    border-radius: 8px;
+    padding: 8px 14px;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-size: 14px;
+  }
+  .radio-option:hover { border-color: #6c63ff; }
+  .radio-option.selected {
+    border-color: #6c63ff;
+    background: #6c63ff22;
+    color: #a89dff;
+  }
+  .radio-option input { display: none; }
+
+  /* Progress bar */
+  .progress-bar {
+    position: sticky;
+    top: 0;
+    background: #0f0f13;
+    padding: 12px 0;
+    z-index: 100;
+    border-bottom: 1px solid #1a1a24;
+    margin-bottom: 32px;
+  }
+  .progress-track {
+    background: #1a1a24;
+    border-radius: 20px;
+    height: 6px;
+    overflow: hidden;
+  }
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #6c63ff, #a89dff);
+    border-radius: 20px;
+    transition: width 0.4s ease;
+    width: 0%;
+  }
+  .progress-label {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 8px;
+    font-size: 13px;
+    color: #666;
+  }
+  .progress-label span:last-child { color: #6c63ff; font-weight: 600; }
+
+  /* Export button */
+  .export-section {
+    text-align: center;
+    padding: 32px 0 16px;
+  }
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 28px;
+    border-radius: 10px;
+    border: none;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-family: inherit;
+  }
+  .btn-primary {
+    background: #6c63ff;
+    color: white;
+  }
+  .btn-primary:hover { background: #7c73ff; transform: translateY(-1px); }
+  .btn-secondary {
+    background: #1a1a24;
+    border: 1px solid #2a2a3a;
+    color: #a0a0b8;
+    margin-left: 12px;
+  }
+  .btn-secondary:hover { border-color: #6c63ff; color: #a89dff; }
+
+  /* Output area */
+  #output-area {
+    display: none;
+    background: #111118;
+    border: 1px solid #2a2a3a;
+    border-radius: 10px;
+    padding: 20px;
+    margin-top: 20px;
+    font-size: 13px;
+    font-family: 'Courier New', monospace;
+    color: #a89dff;
+    white-space: pre-wrap;
+    word-break: break-word;
+    max-height: 400px;
+    overflow-y: auto;
+  }
+
+  .moula-note {
+    background: #6c63ff11;
+    border-left: 3px solid #6c63ff;
+    padding: 12px 16px;
+    border-radius: 0 8px 8px 0;
+    font-size: 13px;
+    color: #a89dff;
+    margin-top: 16px;
+  }
+  .moula-note strong { color: #c4bdff; }
+
+  hr { border: none; border-top: 1px solid #2a2a3a; margin: 8px 0; }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <div class="header">
+    <span class="emoji">🐍</span>
+    <h1>JA2 — Moula pro Petru</h1>
+    <p>Onboarding dokument · Vyplňte před schůzkou nebo společně</p>
+  </div>
+
+  <div class="progress-bar">
+    <div class="progress-label">
+      <span>Hotovo</span>
+      <span id="progress-text">0 / 0 položek</span>
+    </div>
+    <div class="progress-track">
+      <div class="progress-fill" id="progress-fill"></div>
+    </div>
+  </div>
+
+  <!-- SEKCE 1: Checklist před spuštěním -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-num">1</div>
+      <div>
+        <h2>Co musíme udělat před spuštěním JA2</h2>
+        <div class="subtitle">Technická příprava — odškrtej co je hotovo</div>
+      </div>
+    </div>
+    <ul class="checklist" id="checklist-tech">
+      <li onclick="toggle(this)">
+        <div class="check"></div>
+        <div class="label">
+          Rozhodnout kde poběží JA2
+          <span class="note">Mac mini (doporučuji — okamžitě hotovo) nebo Raspberry Pi (potřeba nová karta min. 64GB)</span>
+          <span class="moula-insists">Moula trvá ✦</span>
+        </div>
+      </li>
+      <li onclick="toggle(this)">
+        <div class="check"></div>
+        <div class="label">
+          Freelo — Petra dodá API token
+          <span class="note">Nastavení → API → vygenerovat token. Potřebuji pro přístup k úkolům a zpětné vazbě.</span>
+          <span class="moula-insists">Moula trvá ✦</span>
+        </div>
+      </li>
+      <li onclick="toggle(this)">
+        <div class="check"></div>
+        <div class="label">
+          Potvrdit primární komunikační kanál Petry se mnou
+          <span class="note">WhatsApp / Discord — od toho se odvíjí jak budu posílat content plány a briefy</span>
+          <span class="moula-insists">Moula trvá ✦</span>
+        </div>
+      </li>
+      <li onclick="toggle(this)">
+        <div class="check"></div>
+        <div class="label">
+          FB / Instagram API přístupy (pokud chceme napojení na sítě)
+          <span class="note">Meta Business Suite → přístupy pro aplikaci. Volitelné, ale umožní mi sledovat výkon příspěvků.</span>
+        </div>
+      </li>
+      <li onclick="toggle(this)">
+        <div class="check"></div>
+        <div class="label">
+          Petra dodá 3–5 příkladů reelsů které se jí líbí (styl, tempo, energie)
+          <span class="note">Abych pochopil co je "správný styl" — pošlete mi linky</span>
+          <span class="moula-insists">Moula trvá ✦</span>
+        </div>
+      </li>
+      <li onclick="toggle(this)">
+        <div class="check"></div>
+        <div class="label">
+          Petra popíše co Adéla aktuálně dostává jako zadání
+          <span class="note">Ukázka typického briefu / zadání které Adéla dostane — abych viděl co nefunguje</span>
+        </div>
+      </li>
+      <li onclick="toggle(this)">
+        <div class="check"></div>
+        <div class="label">
+          Rozhodnout: komunikuje JA2 přímo s Adélou, nebo vše přes Petru?
+          <span class="note">Přímá komunikace = rychlejší. Přes Petru = více kontroly.</span>
+          <span class="moula-insists">Moula trvá ✦</span>
+        </div>
+      </li>
+      <li onclick="toggle(this)">
+        <div class="check"></div>
+        <div class="label">
+          Nastavit OpenClaw na cílovém zařízení
+          <span class="note">Tom zajistí technické spuštění. JA2 zdědí moje skilly a přístupy.</span>
+        </div>
+      </li>
+    </ul>
+    <div class="moula-note">
+      <strong>🐍 Moula říká:</strong> Položky označené <span class="moula-insists">Moula trvá ✦</span> jsou blocker — bez nich nemůžu start. Na schůzce budu trvat na zodpovězení těchto bodů jako první.
+    </div>
+  </div>
+
+  <!-- SEKCE 2: Technické nastavení -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-num">2</div>
+      <div>
+        <h2>Technické nastavení</h2>
+        <div class="subtitle">Vyplňte — tato data si přečtu a nastavím se podle nich</div>
+      </div>
+    </div>
+
+    <div class="question-block">
+      <div class="q-label">Kde poběží JA2? <span class="tag">Povinné</span></div>
+      <div class="radio-group" id="rg-device">
+        <label class="radio-option" onclick="selectRadio(this, 'rg-device')">
+          <input type="radio" name="device" value="mac-mini"> Mac mini (doporučeno)
+        </label>
+        <label class="radio-option" onclick="selectRadio(this, 'rg-device')">
+          <input type="radio" name="device" value="raspberry-pi"> Raspberry Pi
+        </label>
+        <label class="radio-option" onclick="selectRadio(this, 'rg-device')">
+          <input type="radio" name="device" value="oba"> Oboje (Mac mini primárně, Pi záloha)
+        </label>
+      </div>
+    </div>
+
+    <div class="question-block">
+      <div class="q-label">Freelo API token Petry <span class="tag">Povinné pro Freelo přístup</span></div>
+      <input type="text" id="freelo-token" placeholder="Vložte token z Freelo → Nastavení → API" />
+    </div>
+
+    <div class="question-block">
+      <div class="q-label">Primární komunikační kanál Petry se mnou <span class="tag">Povinné</span></div>
+      <div class="radio-group" id="rg-channel">
+        <label class="radio-option" onclick="selectRadio(this, 'rg-channel')">
+          <input type="radio" name="channel" value="whatsapp"> WhatsApp
+        </label>
+        <label class="radio-option" onclick="selectRadio(this, 'rg-channel')">
+          <input type="radio" name="channel" value="discord"> Discord
+        </label>
+        <label class="radio-option" onclick="selectRadio(this, 'rg-channel')">
+          <input type="radio" name="channel" value="oba"> Oboje
+        </label>
+      </div>
+    </div>
+
+    <div class="question-block">
+      <div class="q-label">Komunikuje JA2 přímo s Adélou? <span class="tag">Povinné</span></div>
+      <div class="radio-group" id="rg-adela">
+        <label class="radio-option" onclick="selectRadio(this, 'rg-adela')">
+          <input type="radio" name="adela" value="primo"> Ano, přímo s Adélou
+        </label>
+        <label class="radio-option" onclick="selectRadio(this, 'rg-adela')">
+          <input type="radio" name="adela" value="pres-petru"> Ne, vše přes Petru
+        </label>
+        <label class="radio-option" onclick="selectRadio(this, 'rg-adela')">
+          <input type="radio" name="adela" value="hybridni"> Hybridně — routine přes Adélu, schválení Petrou
+        </label>
+      </div>
+    </div>
+  </div>
+
+  <!-- SEKCE 3: Profil Petry pro JA2 -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-num">3</div>
+      <div>
+        <h2>Profil Petry — co o sobě JA2 musí vědět</h2>
+        <div class="subtitle">Čím více vyplníte, tím lépe se nastavím</div>
+      </div>
+    </div>
+
+    <div class="question-block">
+      <div class="q-label">Kdo jsou Petřiny klientky? (cílová skupina) <span class="tag">Povinné</span></div>
+      <textarea id="cilova-skupina" placeholder="Věk, životní situace, největší bolesti, co je trápí, proč přicházejí za Petrou..."></textarea>
+    </div>
+
+    <div class="question-block">
+      <div class="q-label">Jak Petra komunikuje? (hlas a styl) <span class="tag">Povinné</span></div>
+      <textarea id="hlas-stil" placeholder="Přímá, s nadhledem, vtipná? Jak mluví na sítích vs. ve workshopu? Co nesmí JA2 nikdy říct?"></textarea>
+    </div>
+
+    <div class="question-block">
+      <div class="q-label">Jaké produkty/služby Petra prodává? <span class="tag">Povinné</span></div>
+      <textarea id="produkty" placeholder="Klub, 5týdenní programy, workshopy... Uveďte ceny, délky, co obsahují"></textarea>
+    </div>
+
+    <div class="question-block">
+      <div class="q-label">Největší výsledky klientek (reference/příběhy) <span class="tag">Doporučené</span></div>
+      <textarea id="reference" placeholder="2-3 konkrétní příběhy úspěchu které Petra nejčastěji sdílí. JA2 z nich bude tvořit obsah."></textarea>
+    </div>
+
+    <div class="question-block">
+      <div class="q-label">Linky na reelsy které se Petře líbí (styl, tempo) <span class="tag">Povinné</span></div>
+      <textarea id="reels-inspirace" placeholder="3-5 linků na reelsy — vlastní nebo cizí — které zachycují správnou energii a styl"></textarea>
+    </div>
+
+    <div class="question-block">
+      <div class="q-label">Co Adéla aktuálně dostává jako zadání? <span class="tag">Doporučené</span></div>
+      <textarea id="adela-zadani" placeholder="Ukázka typického briefu. Třeba: 'Udělej reels o tom, že...'" ></textarea>
+    </div>
+  </div>
+
+  <!-- SEKCE 4: Co chce Petra od JA2 -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-num">4</div>
+      <div>
+        <h2>Co chce Petra od JA2 dělat</h2>
+        <div class="subtitle">Zaškrtni co chceš, aby JA2 dělal automaticky</div>
+      </div>
+    </div>
+    <ul class="checklist" id="checklist-features">
+      <li onclick="toggle(this)">
+        <div class="check"></div>
+        <div class="label">
+          Týdenní content plán (pondělí–neděle, typy příspěvků, hooky)
+          <span class="note">Každý týden mi pošle plán příspěvků připravený k realizaci</span>
+        </div>
+      </li>
+      <li onclick="toggle(this)">
+        <div class="check"></div>
+        <div class="label">
+          Kreativní briefy pro Adélu (hotové, konkrétní zadání)
+          <span class="note">Ne "udělej reels o hubnutí" ale "Hook: X, délka: 20s, structure: A-B-C, cíl: přivést do skupiny"</span>
+        </div>
+      </li>
+      <li onclick="toggle(this)">
+        <div class="check"></div>
+        <div class="label">
+          Kontrola reelsů od Adély před publikací (scoring + zpětná vazba)
+          <span class="note">Adéla nahraje reels, JA2 zkontroluje: hook OK? Délka? Jedna myšlenka? Schválit / vrátit.</span>
+        </div>
+      </li>
+      <li onclick="toggle(this)">
+        <div class="check"></div>
+        <div class="label">
+          Příprava warm-up série před každou prodejní kampaní
+          <span class="note">Strukturovaná séria 7–10 dní před startem kampaně — zahřeje publikum</span>
+        </div>
+      </li>
+      <li onclick="toggle(this)">
+        <div class="check"></div>
+        <div class="label">
+          Po kampani — analýza výsledků (SWOT, co příště jinak)
+          <span class="note">Rozebereme kampaň: co fungovalo, co ne, jak příště</span>
+        </div>
+      </li>
+      <li onclick="toggle(this)">
+        <div class="check"></div>
+        <div class="label">
+          Příprava podkladů na koučovací sezení s Tomem
+          <span class="note">Před každou schůzkou shrnu situaci, připravím otázky a témata</span>
+        </div>
+      </li>
+      <li onclick="toggle(this)">
+        <div class="check"></div>
+        <div class="label">
+          Přístupy do Freela — zadávání úkolů Adéle přímo
+          <span class="note">Potřebuji Freelo token + vědět ve kterém projektu Adéla pracuje</span>
+        </div>
+      </li>
+      <li onclick="toggle(this)">
+        <div class="check"></div>
+        <div class="label">
+          Monitoring FB/Instagram — co funguje, co ne
+          <span class="note">Potřebuji API přístupy. Budu sledovat engagement a navrhovat optimalizace.</span>
+        </div>
+      </li>
+      <li onclick="toggle(this)">
+        <div class="check"></div>
+        <div class="label">
+          Pomoc s přípravou webinářů / workshopů (scénáře, struktury)
+          <span class="note">Na základě záznamu sezení připravím osnovu pro příští webinář</span>
+        </div>
+      </li>
+    </ul>
+  </div>
+
+  <!-- SEKCE 5: Otázky na schůzce kde Moula trvá na odpovědi -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-num">5</div>
+      <div>
+        <h2>Otázky kde JA2 bude trvat na odpovědi</h2>
+        <div class="subtitle">Zaškrtněte které otázky má JA2 vždy klást při tvorbě scénáře</div>
+      </div>
+    </div>
+    <ul class="checklist" id="checklist-insist">
+      <li onclick="toggle(this)">
+        <div class="check"></div>
+        <div class="label">
+          "Jaký je cíl TOHOTO týdne na sítích?" (nábor do skupiny / prodej programu / zahřívání?)
+          <span class="note">Bez toho nevím kam mám obsah namířit</span>
+        </div>
+      </li>
+      <li onclick="toggle(this)">
+        <div class="check"></div>
+        <div class="label">
+          "Jaké témata jsou teď aktuální v životě klientek?" (léto, dovolené, návrat do práce?)
+          <span class="note">Obsah musí rezonovat s tím co právě prožívají</span>
+        </div>
+      </li>
+      <li onclick="toggle(this)">
+        <div class="check"></div>
+        <div class="label">
+          "Máš nové reference nebo příběhy klientky k použití?"
+          <span class="note">Social proof je nejsilnější obsah — chci ho hned</span>
+        </div>
+      </li>
+      <li onclick="toggle(this)">
+        <div class="check"></div>
+        <div class="label">
+          "Co se minulý týden na sítích chytlo, co propadlo?"
+          <span class="note">Potřebuji feedback loop aby se content zlepšoval</span>
+        </div>
+      </li>
+      <li onclick="toggle(this)">
+        <div class="check"></div>
+        <div class="label">
+          "Jaká je nálada v klubu? Co holky řeší?"
+          <span class="note">Klub = nejlepší zdroj insightů pro content</span>
+        </div>
+      </li>
+      <li onclick="toggle(this)">
+        <div class="check"></div>
+        <div class="label">
+          "Máš čas na nové video, nebo jedeme ze zásoby?"
+          <span class="note">Reálné kapacity = reálný plán. Nechci dávat Adéle úkoly které nenastane.</span>
+        </div>
+      </li>
+    </ul>
+  </div>
+
+  <!-- SEKCE 6: Volné poznámky -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-num">6</div>
+      <div>
+        <h2>Volné poznámky / vzkazy pro JA2</h2>
+        <div class="subtitle">Cokoliv co chcete aby věděl</div>
+      </div>
+    </div>
+    <div class="question-block">
+      <div class="q-label">Tom — vzkaz pro JA2 <span class="tag optional">Volitelné</span></div>
+      <textarea id="vzkaz-tom" placeholder="Cokoliv co JA2 musí vědět od Toma..."></textarea>
+    </div>
+    <div class="question-block">
+      <div class="q-label">Petra — vzkaz pro JA2 <span class="tag optional">Volitelné</span></div>
+      <textarea id="vzkaz-petra" placeholder="Petřiny priority, obavy, nebo co by chtěla od JA2 jako první..."></textarea>
+    </div>
+  </div>
+
+  <!-- Export -->
+  <div class="export-section">
+    <button class="btn btn-primary" onclick="exportData()">🐍 Exportovat data pro JA2</button>
+    <button class="btn btn-secondary" onclick="copyData()">📋 Kopírovat do schránky</button>
+    <div id="output-area"></div>
+    <p style="margin-top: 16px; font-size: 13px; color: #555;">
+      Po exportu zkopírujte text a pošlete ho Moulovi (Tom nebo Petra) — nebo ho pošlete přímo do #ja2 na Discordu
+    </p>
+  </div>
+
+</div>
+
+<script>
+  function toggle(el) {
+    el.classList.toggle('done');
+    updateProgress();
+    saveState();
+  }
+
+  function selectRadio(el, groupId) {
+    document.querySelectorAll('#' + groupId + ' .radio-option').forEach(o => o.classList.remove('selected'));
+    el.classList.add('selected');
+    saveState();
+  }
+
+  function updateProgress() {
+    const all = document.querySelectorAll('.checklist li');
+    const done = document.querySelectorAll('.checklist li.done');
+    const pct = all.length ? Math.round((done.length / all.length) * 100) : 0;
+    document.getElementById('progress-fill').style.width = pct + '%';
+    document.getElementById('progress-text').textContent = done.length + ' / ' + all.length + ' položek';
+  }
+
+  function saveState() {
+    const state = {};
+    // checklists
+    document.querySelectorAll('.checklist').forEach(cl => {
+      const id = cl.id;
+      state[id] = [];
+      cl.querySelectorAll('li').forEach((li, i) => {
+        state[id][i] = li.classList.contains('done');
+      });
+    });
+    // inputs
+    ['freelo-token','cilova-skupina','hlas-stil','produkty','reference',
+     'reels-inspirace','adela-zadani','vzkaz-tom','vzkaz-petra'].forEach(id => {
+      const el = document.getElementById(id);
+      if (el) state[id] = el.value;
+    });
+    // radios
+    ['rg-device','rg-channel','rg-adela'].forEach(rg => {
+      const sel = document.querySelector('#' + rg + ' .radio-option.selected input');
+      if (sel) state[rg] = sel.value;
+    });
+    localStorage.setItem('ja2-onboarding', JSON.stringify(state));
+  }
+
+  function loadState() {
+    const raw = localStorage.getItem('ja2-onboarding');
+    if (!raw) return;
+    try {
+      const state = JSON.parse(raw);
+      // checklists
+      document.querySelectorAll('.checklist').forEach(cl => {
+        const id = cl.id;
+        if (state[id]) {
+          cl.querySelectorAll('li').forEach((li, i) => {
+            if (state[id][i]) li.classList.add('done');
+          });
+        }
+      });
+      // inputs
+      ['freelo-token','cilova-skupina','hlas-stil','produkty','reference',
+       'reels-inspirace','adela-zadani','vzkaz-tom','vzkaz-petra'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el && state[id] !== undefined) el.value = state[id];
+      });
+      // radios
+      ['rg-device','rg-channel','rg-adela'].forEach(rg => {
+        if (state[rg]) {
+          const opt = document.querySelector('#' + rg + ' input[value="' + state[rg] + '"]');
+          if (opt) opt.closest('.radio-option').classList.add('selected');
+        }
+      });
+    } catch(e) {}
+    updateProgress();
+  }
+
+  function getVal(id) {
+    const el = document.getElementById(id);
+    return el ? (el.value.trim() || '—') : '—';
+  }
+  function getRadio(name) {
+    const el = document.querySelector('input[name="' + name + '"]:checked') ||
+                document.querySelector('[name="' + name + '"].selected input');
+    if (!el) {
+      // check via class
+      const rg = document.querySelector('.radio-option.selected input[name="' + name + '"]');
+      return rg ? rg.value : '—';
+    }
+    return el.value;
+  }
+  function getChecked(listId) {
+    const items = [];
+    document.querySelectorAll('#' + listId + ' li.done .label').forEach(el => {
+      items.push('✓ ' + el.childNodes[0].textContent.trim());
+    });
+    return items.length ? items.join('\n') : '— nic nezaškrtnuto';
+  }
+
+  function buildExport() {
+    return `=== JA2 ONBOARDING DATA ===
+Datum: ${new Date().toLocaleDateString('cs-CZ')}
+
+--- TECHNICKÉ NASTAVENÍ ---
+Zařízení: ${getRadio('device')}
+Primární kanál: ${getRadio('channel')}
+Komunikace s Adélou: ${getRadio('adela')}
+Freelo token: ${getVal('freelo-token')}
+
+--- HOTOVO (checklist příprava) ---
+${getChecked('checklist-tech')}
+
+--- PROFIL PETRY ---
+Cílová skupina: ${getVal('cilova-skupina')}
+Hlas a styl: ${getVal('hlas-stil')}
+Produkty/služby: ${getVal('produkty')}
+Reference/příběhy: ${getVal('reference')}
+Inspirace reelsy: ${getVal('reels-inspirace')}
+Aktuální zadání Adéle: ${getVal('adela-zadani')}
+
+--- CO CHCE PETRA OD JA2 ---
+${getChecked('checklist-features')}
+
+--- OTÁZKY KDE JA2 TRVÁ ---
+${getChecked('checklist-insist')}
+
+--- VZKAZY ---
+Tom: ${getVal('vzkaz-tom')}
+Petra: ${getVal('vzkaz-petra')}
+
+=== KONEC ===`;
+  }
+
+  function exportData() {
+    const text = buildExport();
+    const area = document.getElementById('output-area');
+    area.style.display = 'block';
+    area.textContent = text;
+    area.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  }
+
+  function copyData() {
+    const text = buildExport();
+    navigator.clipboard.writeText(text).then(() => {
+      const btn = event.target;
+      btn.textContent = '✅ Zkopírováno!';
+      setTimeout(() => btn.textContent = '📋 Kopírovat do schránky', 2000);
+    });
+  }
+
+  // Auto-save on input
+  document.addEventListener('input', saveState);
+  document.addEventListener('change', saveState);
+
+  // Load on start
+  loadState();
+  updateProgress();
+</script>
+</body>
+</html>
