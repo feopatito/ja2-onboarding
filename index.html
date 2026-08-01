@@ -254,7 +254,8 @@ input[type="range"] { flex: 1; accent-color: #6c63ff; cursor: pointer; }
     <h3>🐍 Stav nastavení JA2 — 2.8.2026</h3>
     <div class="srow"><div class="dot green"></div><span><strong style="color:#4ade80">Hotovo:</strong> Zařízení (Mac mini) · Kanál (WhatsApp + Discord) · Adéla (přes Petru) · SOUL v3 nasazena · Tón · Pravidla · Tabu · Funkce JA2</span></div>
     <div class="srow"><div class="dot red"></div><span><strong style="color:#ff7070">Chybí od Petry:</strong> Příběhy klientek (reference) · Popis zadání pro Adélu · Vzkaz pro JA2 · Výběr priority · Doplnit reelsy (máme 4, ideálně 5+)</span></div>
-    <div class="srow"><div class="dot yellow"></div><span><strong style="color:#f59e0b">Čeká na Kubu:</strong> FB / Instagram API přístupy · Freelo token Petry</span></div>
+    <div class="srow"><div class="dot green"></div><span><strong style="color:#4ade80">Hotovo navíc:</strong> Freelo napojeno ✅</span></div>
+    <div class="srow"><div class="dot yellow"></div><span><strong style="color:#f59e0b">Čeká na Kubu:</strong> FB / Instagram API přístupy</span></div>
   </div>
 
   <div class="progress-bar">
@@ -282,10 +283,9 @@ input[type="range"] { flex: 1; accent-color: #6c63ff; cursor: pointer; }
         <div class="label">Rozhodnout kde poběží JA2 <span class="ok-tag">✅ Mac mini</span>
         </div>
       </li>
-      <li onclick="toggle(this)">
+      <li class="done" onclick="toggle(this)">
         <div class="check"></div>
-        <div class="label">Freelo — Petra dodá API token <span class="missing-tag">🔴 Chybí</span>
-          <span class="note">Freelo → Nastavení → API → vygenerovat token → poslat Tomovi</span>
+        <div class="label">Freelo — API token <span class="ok-tag">✅ Napojeno</span>
         </div>
       </li>
       <li class="done" onclick="toggle(this)">
@@ -354,8 +354,8 @@ input[type="range"] { flex: 1; accent-color: #6c63ff; cursor: pointer; }
 
     <div class="question-block">
       <div class="q-label">Freelo API token Petry <span class="tag">Povinné pro Freelo</span></div>
-      <span class="field-note red">🔴 Chybí — Petro: Freelo → Nastavení → API → zkopírovat token</span>
-    <input type="text" id="freelo-token" class="missing-field" placeholder="🔴 Vložte token z Freelo → Nastavení → API" />
+      <span class="field-note green">✅ Freelo napojeno — token aktivní</span>
+    <input type="text" id="freelo-token" class="prefilled-field" value="✅ Napojeno" />
     </div>
 
     <div class="question-block">
